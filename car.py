@@ -1,15 +1,15 @@
 import pygame as pg
-import math
+import math,random
 from settings import *
 class Car(pg.sprite.Sprite):
-    def __init__(self,type,pos,angle):
+    def __init__(self,type,pos,angle,colCars):
         super().__init__()
         self.type = type
         self.original_image = pg.Surface(SIZE,pg.SRCALPHA)
         if type == "Player":
-            self.original_image.fill("blue")
+            self.original_image.fill(PLAYER_COLOR)
         else:
-            self.original_image.fill("red")
+            self.original_image.fill(random.choice(AI_COLORS))
         self.image = self.original_image
         self.rect = self.image.get_rect()
         self.rect.center = pos
@@ -19,6 +19,8 @@ class Car(pg.sprite.Sprite):
         self.acceleration = ACCELERATION
         self.deceleration = DECELERATION
         self.rotation_speed = ROTATION_SPEED
+        self.live = True
+        self.collide_with_cars = colCars
         if self.type == "AI":
             pass #self.brain = Network()
     
@@ -57,8 +59,27 @@ class Car(pg.sprite.Sprite):
 
         self.image = pg.transform.rotate(self.original_image,-self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
+    
+    def check_collisions(self, collide_with_other_cars):
+        #Window border collisions
+        if self.rect.x < 0 or self.rect.right > WIDTH:
+            self.live = False
+        if self.rect.y < 0 or self.rect.bottom > HEIGHT:
+            self.live = False
+        #collisioni con altre auto
+        if collide_with_other_cars:
+            collision_list = pg.sprite.spritecollide(self,self.groups()[0],False)
+            for sprite in collision_list:
+                if sprite != self:
+                    self.live = False
+                    break
 
     def update(self):
-        if self.type == "Player":
-            self.player_input()
+        if self.live:
+            if self.type == "Player":
+                self.player_input()
+            self.check_collisions(self.collide_with_cars)
+        else:
+            self.original_image.fill(DEATH_COLOR)
+            self.speed = 0
         self.move()

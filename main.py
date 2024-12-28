@@ -11,7 +11,7 @@ pg.display.set_caption("Self Driving Car")
 clock = pg.time.Clock()
 
 cars = pg.sprite.Group()
-cars.add(Car("Player",(WIDTH //2,HEIGHT//2),0))
+cars.add(Car("Player",(WIDTH //2,HEIGHT//2),0,False))
 
 while True:
     for event in pg.event.get():
