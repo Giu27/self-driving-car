@@ -11,7 +11,8 @@ class Car(pg.sprite.Sprite):
         else:
             self.original_image.fill(random.choice(AI_COLORS))
         self.image = self.original_image
-        self.rect = self.image.get_rect()
+        self.mask = pg.mask.from_surface(self.image)
+        self.rect = self.image.get_frect()
         self.rect.center = pos
         self.angle = angle
         self.speed = 0
@@ -61,6 +62,7 @@ class Car(pg.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
     
     def check_collisions(self, collide_with_other_cars):
+        self.mask = pg.mask.from_surface(self.image) #mask for pixel perfect collision
         #Window border collisions
         if self.rect.x < 0 or self.rect.right > WIDTH:
             self.live = False
@@ -71,8 +73,9 @@ class Car(pg.sprite.Sprite):
             collision_list = pg.sprite.spritecollide(self,self.groups()[0],False)
             for sprite in collision_list:
                 if sprite != self:
-                    self.live = False
-                    break
+                    offset = (sprite.rect.left - self.rect.left,sprite.rect.top - self.rect.top)
+                    if self.mask.overlap(sprite.mask,offset):
+                        self.live = False
 
     def update(self):
         if self.live:
