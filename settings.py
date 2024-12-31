@@ -3,13 +3,24 @@ FPS = 60
 FONT_SIZE = 40
 DEBUG = True
 
-#Car
+#CAR
 MAX_SPEED = 10
 ACCELERATION = 0.5
 DECELERATION = 0.2
 ROTATION_SPEED = 3
 SIZE = (80,40)
 DEATH_COLOR = "grey"
+
 #PLAYER CAR
 PLAYER_COLOR = "blue"
+
+#AI CAR
 AI_COLORS = ("green", "yellow","red", "pink","black","orange","dark blue")
+
+#POINT
+POINT_COLOR = "red"
+RADIUS = 5
+
+#SEGMENT
+SEGMENT_COLOR = "red"
+SEG_WIDTH = 12
