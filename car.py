@@ -61,7 +61,15 @@ class Car(pg.sprite.Sprite):
         self.image = pg.transform.rotate(self.original_image,-self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
     
-    def check_collisions(self, collide_with_other_cars):
+    def collisions_with_sprites(self,group):
+        collision_list = pg.sprite.spritecollide(self,group,False)
+        for sprite in collision_list:
+            if sprite != self:
+                offset = (sprite.rect.left - self.rect.left,sprite.rect.top - self.rect.top)
+                if self.mask.overlap(sprite.mask,offset):
+                    self.live = False
+    
+    def check_collisions(self, collide_with_other_cars,other_sprites):
         self.mask = pg.mask.from_surface(self.image) #mask for pixel perfect collision
         #Window border collisions
         if self.rect.x < 0 or self.rect.right > WIDTH:
@@ -70,18 +78,16 @@ class Car(pg.sprite.Sprite):
             self.live = False
         #collisioni con altre auto
         if collide_with_other_cars:
-            collision_list = pg.sprite.spritecollide(self,self.groups()[0],False)
-            for sprite in collision_list:
-                if sprite != self:
-                    offset = (sprite.rect.left - self.rect.left,sprite.rect.top - self.rect.top)
-                    if self.mask.overlap(sprite.mask,offset):
-                        self.live = False
+            self.collisions_with_sprites(self.groups()[0])
+        #altri sprite
+        for group in other_sprites:
+            self.collisions_with_sprites(group)
 
-    def update(self):
+    def update(self,other_sprites):
         if self.live:
             if self.type == "Player":
                 self.player_input()
-            self.check_collisions(self.collide_with_cars)
+            self.check_collisions(self.collide_with_cars,other_sprites)
         else:
             self.original_image.fill(DEATH_COLOR)
             self.speed = 0

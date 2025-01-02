@@ -34,7 +34,7 @@ while True:
     screen.fill("white")
     points.draw(screen)
     segments.draw(screen)
-    cars.update()
+    cars.update((points,segments))
     cars.draw(screen)
     if debug and DEBUG:
         for sprite in cars:
