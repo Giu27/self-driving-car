@@ -16,13 +16,3 @@ PLAYER_COLOR = "blue"
 
 #AI CAR
 AI_COLORS = ("green", "yellow","red", "pink","black","orange","dark blue")
-
-#THE FOLLOWING SETTINGS ARE DISABLED AS THE RELATED CODE WAS DISCARDED
-
-#POINT
-#POINT_COLOR = "red"
-#RADIUS = 5
-
-#SEGMENT
-#SEGMENT_COLOR = "red"
-#SEG_WIDTH = 12
